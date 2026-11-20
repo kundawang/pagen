@@ -7,8 +7,12 @@ pagen: a required argument was not provided
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
@@ -21,8 +25,12 @@ pagen: unexpected argument 'bar.png' found
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
@@ -35,8 +43,12 @@ invalid value "n" for flag -width: parse error
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
@@ -49,8 +61,12 @@ invalid value "n" for flag -height: parse error
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
@@ -63,11 +79,45 @@ invalid value "n" for flag -block-size: parse error
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
     	Print version number
   -width uint
     	Set the width of pixel art (default 256)
+
+$ pagen -width 0 output.png --> FAIL
+pagen: width and height must be greater than 0: got 0x256
+
+$ pagen -height 0 output.png --> FAIL
+pagen: width and height must be greater than 0: got 256x0
+
+$ pagen -block-size 0 output.png --> FAIL
+pagen: block size must be greater than 0: got 0
+
+$ pagen -width 4294967295 -height 4294967295 output.png --> FAIL
+pagen: dimensions 4294967295x4294967295 are too large: must contain at most 268435456 pixels
+
+$ pagen -width 8192 -height 8192 output.png --> FAIL
+pagen: too many blocks: 8192x8192 blocks of size 1 exceeds the limit of 16777216 blocks
+
+$ pagen -seed n output.png --> FAIL
+pagen: invalid seed "n": strconv.ParseUint: parsing "n": invalid syntax
+
+$ pagen -colors , output.png --> FAIL
+pagen: palette contains an empty color: ","
+
+$ pagen -colors #ff0000,,#00ff00 output.png --> FAIL
+pagen: palette contains an empty color: "#ff0000,,#00ff00"
+
+$ pagen -colors #ff00zz output.png --> FAIL
+pagen: invalid color "#ff00zz": strconv.ParseUint: parsing "ff00zz": invalid syntax
+
+$ pagen -colors #ff00 output.png --> FAIL
+pagen: invalid color "#ff00": must be #rgb, #rrggbb or #rrggbbaa

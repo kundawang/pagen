@@ -14,6 +14,21 @@ All notable changes to this project will be documented in this file.
 The format is based on https://keepachangelog.com/[Keep a Changelog], and this
 project adheres to https://semver.org/[Semantic Versioning].
 
+== Unreleased
+
+=== Added
+
+* Add `-seed` and `-colors` options for reproducible palettes. The color of
+  each block is derived from the seed and its grid position, so the PNG and
+  SVG outputs match block by block regardless of concurrency
+
+=== Changed
+
+* Validate the dimensions, the block size and the palette before generating,
+  and limit the number of blocks and the number of goroutines
+* Clip the edge blocks of the SVG output to the canvas so that they match
+  the PNG output
+
 == {compare-url}/v0.1.1\...v0.1.2[0.1.2] - 2025-05-16
 
 === Added

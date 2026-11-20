@@ -12,26 +12,34 @@ import (
 	"sync"
 )
 
-func generatePNG(outputPath string, width, height, blockSize int) (err error) {
-	img := image.NewNRGBA(image.Rect(0, 0, width, height))
+func generatePNG(outputPath string, cfg config) (err error) {
+	img := image.NewNRGBA(image.Rect(0, 0, cfg.width, cfg.height))
 
 	var wg sync.WaitGroup
 
-	for y := 0; y < height; y += blockSize {
-		for x := 0; x < width; x += blockSize {
+	sem := make(chan struct{}, maxConcurrency)
+
+	for cy := 0; cy < cfg.rows; cy++ {
+		for cx := 0; cx < cfg.cols; cx++ {
+			// The color is resolved from the grid position before the
+			// goroutine starts, so the scheduling order cannot affect
+			// the result.
+			c := cfg.colors.at(cx, cy)
+			x, y, w, h := cfg.blockRect(cx, cy)
+
+			sem <- struct{}{}
 			wg.Add(1)
 
-			go func(x, y int) {
+			go func() {
 				defer wg.Done()
+				defer func() { <-sem }()
 
-				c := generateNRGBA()
-
-				for by := 0; (by < blockSize) && (y+by < height); by++ {
-					for bx := 0; (bx < blockSize) && (x+bx < width); bx++ {
-						img.Set(x+bx, y+by, c)
+				for by := y; by < y+h; by++ {
+					for bx := x; bx < x+w; bx++ {
+						img.SetNRGBA(bx, by, c)
 					}
 				}
-			}(x, y)
+			}()
 		}
 	}
 

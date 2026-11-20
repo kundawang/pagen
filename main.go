@@ -32,16 +32,31 @@ func main() {
 	}
 
 	outputPath := flag.Arg(0)
-	width, height, blockSize := int(opt.width), int(opt.height), int(opt.blockSize)
+
+	var seedSet, colorsSet bool
+	flag.Visit(func(f *flag.Flag) {
+		switch f.Name {
+		case "seed":
+			seedSet = true
+		case "colors":
+			colorsSet = true
+		}
+	})
+
+	cfg, err := newConfig(opt.width, opt.height, opt.blockSize, opt.seed, seedSet, opt.colors, colorsSet)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "pagen: %v\n", err)
+		os.Exit(1)
+	}
 
 	if opt.svg {
-		err := generateSVG(outputPath, width, height, blockSize)
+		err := generateSVG(outputPath, cfg)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "pagen: %v\n", err)
 			os.Exit(1)
 		}
 	} else {
-		err := generatePNG(outputPath, width, height, blockSize)
+		err := generatePNG(outputPath, cfg)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "pagen: %v\n", err)
 			os.Exit(1)

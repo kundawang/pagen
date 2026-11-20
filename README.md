@@ -53,6 +53,21 @@ Here is an example of generated pixel art:
 
 ![Output](assets/output.svg)
 
+### Reproducible colors
+
+Use `-seed` together with `-colors` to make the color of every block
+deterministic. The same dimensions, block size, seed and palette always
+produce the same image, and the PNG and SVG outputs match block by block:
+
+```sh
+pagen -width 1280 -height 720 -block-size 80 -seed 42 -colors "#ff0000,#00ff00,#0000ff" output.png
+pagen -width 1280 -height 720 -block-size 80 -seed 42 -colors "#ff0000,#00ff00,#0000ff" -svg output.svg
+```
+
+`-colors` takes a comma-separated palette of hex colors (`#rgb`, `#rrggbb`
+or `#rrggbbaa`). Without `-seed` the colors remain random; without `-colors`
+the seed alone produces a reproducible random image.
+
 ## Source code
 
 The upstream repository is available at

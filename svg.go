@@ -11,7 +11,7 @@ import (
 	svg "github.com/ajstarks/svgo"
 )
 
-func generateSVG(outputPath string, width, height, blockSize int) (err error) {
+func generateSVG(outputPath string, cfg config) (err error) {
 	output, err := os.Create(filepath.Clean(outputPath))
 	if err != nil {
 		return err
@@ -26,15 +26,16 @@ func generateSVG(outputPath string, width, height, blockSize int) (err error) {
 
 	canvas := svg.New(output)
 
-	canvas.Start(width, height)
+	canvas.Start(cfg.width, cfg.height)
 	defer canvas.End()
 
-	for y := 0; y < height; y += blockSize {
-		for x := 0; x < width; x += blockSize {
-			c := generateNRGBA()
-			fill := canvas.RGB(int(c.R), int(c.G), int(c.B))
+	for cy := 0; cy < cfg.rows; cy++ {
+		for cx := 0; cx < cfg.cols; cx++ {
+			c := cfg.colors.at(cx, cy)
+			fill := canvas.RGBA(int(c.R), int(c.G), int(c.B), float64(c.A)/255)
 
-			canvas.Rect(x, y, blockSize, blockSize, fill)
+			x, y, w, h := cfg.blockRect(cx, cy)
+			canvas.Rect(x, y, w, h, fill)
 		}
 	}
 

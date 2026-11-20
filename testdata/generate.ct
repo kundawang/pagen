@@ -5,3 +5,11 @@
 $ pagen -width 1280 -height 720 -block-size 80 output.png
 
 $ pagen -width 1280 -height 720 -block-size 80 -svg output.svg
+
+$ pagen -width 1280 -height 720 -block-size 80 -seed 42 -colors #ff0000,#00ff00,#0000ff seeded.png
+
+$ pagen -width 1280 -height 720 -block-size 80 -seed 42 -colors #ff0000,#00ff00,#0000ff -svg seeded.svg
+
+$ pagen -width 97 -height 53 -block-size 8 -seed 42 -colors #ff0000,#00ff00,#0000ff edge.png
+
+$ pagen -width 97 -height 53 -block-size 8 -seed 42 -colors #ff0000,#00ff00,#0000ff -svg edge.svg

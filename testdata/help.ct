@@ -6,8 +6,12 @@ $ pagen -h
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
@@ -19,8 +23,12 @@ $ pagen -help
 Usage: pagen [OPTIONS] <FILE>
   -block-size uint
     	Set the block size of pixel art (default 1)
+  -colors string
+    	Set a comma-separated palette of hex colors
   -height uint
     	Set the height of pixel art (default 256)
+  -seed string
+    	Set the seed for reproducible colors
   -svg
     	Generate SVG file instead of PNG file
   -version
